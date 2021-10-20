@@ -33,8 +33,11 @@ const (
 	RegexpTypeQuery  regexpType = 3
 )
 
-func NewRouteRegexp(tpl string, typ regexpType, options routeRegexpOptions) (*routeRegexp, error) {
-	return newRouteRegexp(tpl, typ, options)
+func NewRouteRegexp(tpl string, typ regexpType) (*routeRegexp, error) {
+	return newRouteRegexp(tpl, typ, routeRegexpOptions{
+		strictSlash:    false,
+		useEncodedPath: false,
+	})
 }
 
 // newRouteRegexp parses a route template and returns a routeRegexp,
