@@ -26,6 +26,11 @@ const (
 	regexpTypeHost   regexpType = 1
 	regexpTypePrefix regexpType = 2
 	regexpTypeQuery  regexpType = 3
+
+	RegexpTypePath   regexpType = 0
+	RegexpTypeHost   regexpType = 1
+	RegexpTypePrefix regexpType = 2
+	RegexpTypeQuery  regexpType = 3
 )
 
 func NewRouteRegexp(tpl string, typ regexpType, options routeRegexpOptions) (*routeRegexp, error) {
