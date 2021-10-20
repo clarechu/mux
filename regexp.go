@@ -28,6 +28,10 @@ const (
 	regexpTypeQuery  regexpType = 3
 )
 
+func NewRouteRegexp(tpl string, typ regexpType, options routeRegexpOptions) (*routeRegexp, error) {
+	return newRouteRegexp(tpl, typ, options)
+}
+
 // newRouteRegexp parses a route template and returns a routeRegexp,
 // used to match a host, a path or a query string.
 //
@@ -189,6 +193,25 @@ func (r *routeRegexp) Match(req *http.Request, match *RouteMatch) bool {
 	path := req.URL.Path
 	if r.options.useEncodedPath {
 		path = req.URL.EscapedPath()
+	}
+	return r.regexp.MatchString(path)
+}
+
+// MatchString matches the regexp against the URL host or path.
+func (r *routeRegexp) MatchString(host string, url *url.URL) bool {
+	if r.regexpType == regexpTypeHost {
+		if r.wildcardHostPort {
+			// Don't be strict on the port match
+			if i := strings.Index(host, ":"); i != -1 {
+				host = host[:i]
+			}
+		}
+		return r.regexp.MatchString(host)
+	}
+
+	path := url.Path
+	if r.options.useEncodedPath {
+		path = url.EscapedPath()
 	}
 	return r.regexp.MatchString(path)
 }
