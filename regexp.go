@@ -33,11 +33,18 @@ const (
 	RegexpTypeQuery  regexpType = 3
 )
 
-func NewRouteRegexp(tpl string, typ regexpType) (*routeRegexp, error) {
-	return newRouteRegexp(tpl, typ, routeRegexpOptions{
+func NewRouteRegexp(tpl string, typ regexpType) (*RouteRegexp, error) {
+
+	routeRegexp, err := newRouteRegexp(tpl, typ, routeRegexpOptions{
 		strictSlash:    false,
 		useEncodedPath: false,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return &RouteRegexp{
+		routeRegexp: routeRegexp,
+	}, nil
 }
 
 // newRouteRegexp parses a route template and returns a routeRegexp,
@@ -159,6 +166,10 @@ func newRouteRegexp(tpl string, typ regexpType, options routeRegexpOptions) (*ro
 		varsR:            varsR,
 		wildcardHostPort: wildcardHostPort,
 	}, nil
+}
+
+type RouteRegexp struct {
+	*routeRegexp
 }
 
 // routeRegexp stores a regexp to match a host or path and information to
