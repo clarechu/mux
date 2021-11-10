@@ -235,6 +235,20 @@ func (r *routeRegexp) MatchString(host string, url *url.URL) bool {
 	return r.regexp.MatchString(path)
 }
 
+// MatchPath matches the regexp against the URL host or path.
+func (r *routeRegexp) MatchPath(host string, path string) bool {
+	if r.regexpType == regexpTypeHost {
+		if r.wildcardHostPort {
+			// Don't be strict on the port match
+			if i := strings.Index(host, ":"); i != -1 {
+				host = host[:i]
+			}
+		}
+		return r.regexp.MatchString(host)
+	}
+	return r.regexp.MatchString(path)
+}
+
 // url builds a URL part using the given values.
 func (r *routeRegexp) url(values map[string]string) (string, error) {
 	urlValues := make([]interface{}, len(r.varsN), len(r.varsN))

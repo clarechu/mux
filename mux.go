@@ -543,6 +543,16 @@ func matchInArray(arr []string, value string) bool {
 	return false
 }
 
+// matchInArrayToMethod returns true if the given string value is in the array.
+func matchInArrayToMethod(arr []string, value string) (bool, string) {
+	for _, v := range arr {
+		if v == value {
+			return true, v
+		}
+	}
+	return false, ""
+}
+
 // matchMapWithString returns true if the given key/value pairs exist in a given map.
 func matchMapWithString(toCheck map[string]string, toMatch map[string][]string, canonicalKey bool) bool {
 	for k, v := range toCheck {
